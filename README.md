@@ -3,7 +3,7 @@ Number of functions for plotting Cassini RPWS and MAG data.
 Instructions for download.
 
 Save code to folder in the following format.
-->Folder
+ ->Folder
 	-> Cassini_Plotting
 		-> 1_Load_Cass_Data.py
 		-> 2_Make_Integrated_Power.py
