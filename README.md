@@ -38,6 +38,6 @@ Script that does the following:
    as 'skr_traj_df_2004.csv' (for 2004..)
 
 
-2_Make_Integrated_Power.py 
+### 2_Make_Integrated_Power.py 
 
 Script that makes a file with integrated power in frequency ranges  5-40, 40-100 and 100-600 for each year saved as 
