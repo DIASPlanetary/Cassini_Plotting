@@ -3,8 +3,8 @@ Number of functions for plotting Cassini RPWS and MAG data.
 Instructions for download.
 
 Save code to folder in the following format.
- ->Folder
-	-> Cassini_Plotting
+ ->###Folder
+	-> ###Cassini_Plotting
 		-> 1_Load_Cass_Data.py
 		-> 2_Make_Integrated_Power.py
 		-> 3_Sliding_Window_Flux_Norm.py
@@ -12,7 +12,7 @@ Save code to folder in the following format.
 		-> Plot_Spectrogram.py
 		-> Plot_Trajectory.py
 		-> plotting_func.py
-	-> input_data
+	-> ###input_data
 		-> 2004_FGM_KRTP_1M.TAB
 		...
 		-> 2017_FGM_KRTP_1M.TAB
@@ -25,7 +25,7 @@ Save code to folder in the following format.
 		..
 		-> SKR_2017_001-258_CJ.sav
 
-	-> output_data
+	-> ###output_data
 
 Description of files.
 
