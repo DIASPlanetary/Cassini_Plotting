@@ -131,7 +131,9 @@ def interpolate_skr_data(position_df, akr_df,
 
 
 
-total_traj=[]    
+total_traj=[]  
+total_skr_traj_df =[]
+
 for year in range(2004,2018, 1):
     if year == 2017:
         CJ_SKR_YR_FP = root+'input_data/SKR_2017_001-258_CJ.sav'
@@ -165,6 +167,7 @@ for year in range(2004,2018, 1):
     #Save pandas dataframe with radio data and corresponding traj info.
     #Columns are: 'sweep':sweeps,'datetime_ut', 'freq','flux','pol','pwr','Latitude','LT','Range' (in krtp!)
     skr_traj_df = make_skr_traj_df(year,CJ_SKR_YR_FP)
+    total_skr_traj_df.append(skr_traj_df)
     fp = root+'output_data/skr_traj_df_{}.csv'.format(year)
     skr_traj_df.to_csv(fp, index=False)
     
@@ -173,6 +176,9 @@ for year in range(2004,2018, 1):
     
 total_traj=pd.concat(total_traj)
 total_traj.to_csv(root+'output_data/trajectorytotal.csv',index=False)   
+
+total_skr_traj_df=pd.concat(total_skr_traj_df)
+total_skr_traj_df.to_csv(root+'output_data/skr_traj_df_allyears.csv',index=False)  
 
 
     
