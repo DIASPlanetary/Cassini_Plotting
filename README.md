@@ -26,7 +26,8 @@ Number of functions for plotting Cassini RPWS and MAG data.
 
 	- output_data
 
-## Description of files.
+## Description of files. 
+Need to run the first three files '1_Load_Cass_Data.py', ' 2_Make_Integrated_Power.py' and '3_Sliding_Window_Flux_Norm.py' before other scripts can be used. 
 Detailed description of columns of .csv files etc are available in the scripts themselves.
 ### 1_Load_Cass_Data.py
 Script that does the following:
@@ -44,4 +45,20 @@ Script that makes a file with integrated power in frequency ranges 5-40, 40-100 
 
 ### 3_Sliding_Window_Flux_Norm.py 
 
-This .py file allows for bespoke colorbar normalisation of the RPWS flux density data based on the spacecraft location. The code in this file separates the data into two latitude regions >|5| degrees and <|5|degrees. It then further separates the data into local time bins (user can define these), so that colorbar can be normalised based on the local times sampled by Cassini within the flux density spectrogram plotting window. Script saves the binned data into two files in the 'output_data' folder, 'lowlat_flux.npy' and 'highlat_flux.npy'. After running this script, calling the function 
+This .py file allows for bespoke colorbar normalisation of the RPWS flux density data based on the spacecraft location. The code in this file separates the data into two latitude regions >|5| degrees and <|5|degrees. It then further separates the data into local time bins (user can define these), so that colorbar can be normalised based on the local times sampled by Cassini within the flux density spectrogram plotting window. Script saves the binned data into two files in the 'output_data' folder, 'lowlat_flux.npy' and 'highlat_flux.npy'. After running this script, calling the function `flux_norm` in plotting_func.py implements the sliding window flux normalisation for the 10th and 80th percentiles of data found at given latitude/local time.
+
+### Plot_B_total.py 
+
+Plots B total for date range specified. 
+
+### Plot_Spectrogram.py
+
+Plots spectrograms of flux density and polarization. Can draw polygons around features by providing .json file in TFCAT format. These features can also be masked using the `plot_mask` function.
+
+### Plot Trajectory.py
+
+Makes a three panel plot for given date ranges showing range, latitude and local time. 
+
+### plotting_func.py 
+
+Functions used for the Plot_Spectrogram.py script.
