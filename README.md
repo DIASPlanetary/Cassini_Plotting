@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/562458740.svg)](https://zenodo.org/badge/latestdoi/562458740)
 # Cassini_Plotting
 Number of functions for plotting Cassini RPWS and MAG data.
 
