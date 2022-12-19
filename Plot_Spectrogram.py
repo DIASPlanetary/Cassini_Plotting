@@ -4,7 +4,6 @@ Created on Tue Jan 11 17:51:35 2022
 
 @author: eliza
 """
-root="C:/Users/eliza/Desktop/Python_Scripts/"
 
 import numpy as np
 from scipy.io import readsav
@@ -21,6 +20,13 @@ import shapely.geometry as sg
 from os import path
 import matplotlib as mpl
 import plotting_func as plt_func
+import configparser
+
+config = configparser.ConfigParser()
+config.read('configurations.ini')
+input_data_fp = config['filepaths']['input_data']
+output_data_fp= config['filepaths']['output_data']
+
 
 '''____This was adapted from original code for the space labelling tool!!!___'''
 def get_polygons(polygon_fp,start, end):
@@ -284,9 +290,9 @@ data_end=pd.Timestamp('2006-01-04')
 year = datetime.strftime(data_start, '%Y')
 
 if year == '2017':
-    file = root+'input_data/SKR_2017_001-258_CJ.sav'
+    file = input_data_fp + '/SKR_2017_001-258_CJ.sav'
 else: 
-    file = root+'input_data/SKR_{}_CJ.sav'.format(year)
+    file =input_data_fp + '/SKR_{}_CJ.sav'.format(year)
     
 #Uncomment this for plotting polygons from .json file
 #polygon_fp=root+"output_data/ML_lfes.json"
@@ -305,7 +311,7 @@ ax[0]=plot_flux(ax[0], data_start, data_end, file,colour_in=saved_polys)
 ax[1]=plot_pol(ax[1], data_start, data_end, file,colour_in=saved_polys)
 #ax[2]=plot_mask(ax[2],data_start, data_end, 's', file,polygon_fp)
 #plt.show()
-plt.savefig('test.png')
+#plt.savefig('test.png')
 
 
         

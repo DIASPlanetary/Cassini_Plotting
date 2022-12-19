@@ -4,15 +4,18 @@ Created on Thu Dec 30 19:43:32 2021
 
 @author: eliza
 """
-root="C:/Users/eliza/Desktop/Python_Scripts/"
 
+import configparser
 import numpy as np
 import pandas as pd
 from scipy.io.idl import readsav
 from datetime import datetime
 import scipy.interpolate as interpolate
 
-
+config = configparser.ConfigParser()
+config.read('configurations.ini')
+input_data_fp = config['filepaths']['input_data']
+output_data_fp= config['filepaths']['output_data']
 
 def load_skr(CJ_SKR_YR_FP):
     data = readsav(CJ_SKR_YR_FP , python_dict=True)
@@ -44,7 +47,7 @@ def make_skr_df(CJ_SKR_YR_FP):
     return df
 def traject(year):
     
-    fp_krtp=root+"input_data/{}_FGM_KRTP_1M.TAB".format(year)
+    fp_krtp = input_data_fp + "/{}_FGM_KRTP_1M.TAB".format(year)
 
     df=pd.read_csv(fp_krtp, header=None,delim_whitespace=True)
     df = df.rename(columns={0: 'Time_isot',1:'B_r(nT)',2:'B_theta(nT)',3:'B_phi(nT)',
@@ -52,9 +55,9 @@ def traject(year):
                             8:'Local_Time',9:'NPTS'})
     func_tstmp_todoy = lambda x: ((x -datetime(int(datetime.strftime(x,'%Y')),1,1)).total_seconds()/86400) +1
     time_dt = df['Time_isot'].apply(lambda x: datetime.fromisoformat(x))
-    doy_frac=list(map(func_tstmp_todoy, time_dt))
-    fp_ksm=root+"input_data/{}_FGM_KSM_1M.TAB".format(year)
-    df_ksm=pd.read_csv(fp_ksm, header=None,delim_whitespace=True)
+    doy_frac = list(map(func_tstmp_todoy, time_dt))
+    fp_ksm = input_data_fp + "/{}_FGM_KSM_1M.TAB".format(year)
+    df_ksm =pd.read_csv(fp_ksm, header=None,delim_whitespace=True)
     df_ksm = df_ksm.rename(columns={0: 'Time_isot',1:'B_x(nT)',2:'B_y(nT)',3:'B_z(nT)',
                             4:'B_total(nT)',5:'X(R_s)',6:'Y(R_s)',7: "Z(R_s)",
                             8:'Local_Time',9:'NPTS'})
@@ -136,9 +139,9 @@ total_skr_traj_df =[]
 
 for year in range(2004,2018, 1):
     if year == 2017:
-        CJ_SKR_YR_FP = root+'input_data/SKR_2017_001-258_CJ.sav'
+        CJ_SKR_YR_FP = input_data_fp + '/SKR_2017_001-258_CJ.sav'
     else: 
-        CJ_SKR_YR_FP = root+'input_data/SKR_{}_CJ.sav'.format(year)
+        CJ_SKR_YR_FP = input_data_fp + '/SKR_{}_CJ.sav'.format(year)
     
 
     #Dataframe with trajectory information.
@@ -146,7 +149,7 @@ for year in range(2004,2018, 1):
      # 'lat' 'localtime'  'range' 'xpos_ksm' 'ypos_ksm' 'zpos_ksm'
     traj_df = traject(year)  
     total_traj.append(traj_df)
-    fp = root+'output_data/trajectory{}.csv'.format(year)
+    fp = output_data_fp + '/trajectory{}.csv'.format(year)
     traj_df.to_csv(fp, index=False)
     
     #Load Radio data.
@@ -156,29 +159,29 @@ for year in range(2004,2018, 1):
     #dataframe of interpolated trajectory values.
     #Columns are 'datetime_ut', 'unix', 'LT', 'Latitude', 'Range'
     interped_traj_df = interpolate_skr_data(traj_df, radio_timestamps)
-    fp = root+'output_data/interpedtrajectory{}.csv'.format(year)
+    fp = output_data_fp + '/interpedtrajectory{}.csv'.format(year)
     interped_traj_df.to_csv(fp, index=False)
 
     #dataframe with columns 'sweep','datetime_ut','freq','flux','pol','pwr'
-    skr_df = make_skr_df(root+'input_data/SKR_{}_CJ.sav'.format(year))
-    fp = root+'output_data/skr_df{}.csv'.format(year)
+    skr_df = make_skr_df(CJ_SKR_YR_FP)
+    fp = output_data_fp + '/skr_df{}.csv'.format(year)
     skr_df.to_csv(fp, index=False)
 
     #Save pandas dataframe with radio data and corresponding traj info.
     #Columns are: 'sweep':sweeps,'datetime_ut', 'freq','flux','pol','pwr','Latitude','LT','Range' (in krtp!)
     skr_traj_df = make_skr_traj_df(year,CJ_SKR_YR_FP)
     total_skr_traj_df.append(skr_traj_df)
-    fp = root+'output_data/skr_traj_df_{}.csv'.format(year)
+    fp = output_data_fp + '/skr_traj_df_{}.csv'.format(year)
     skr_traj_df.to_csv(fp, index=False)
     
     
     print(year)
     
 total_traj=pd.concat(total_traj)
-total_traj.to_csv(root+'output_data/trajectorytotal.csv',index=False)   
+total_traj.to_csv(output_data_fp + '/trajectorytotal.csv',index=False)   
 
 total_skr_traj_df=pd.concat(total_skr_traj_df)
-total_skr_traj_df.to_csv(root+'output_data/skr_traj_df_allyears.csv',index=False)  
+total_skr_traj_df.to_csv(output_data_fp +'/skr_traj_df_allyears.csv',index=False)  
 
 
     

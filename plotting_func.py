@@ -9,8 +9,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.dates as mdates
 from bisect import bisect_left
-#customize this to your own computer
-root="C:/Users/eliza/Desktop/Python_Scripts/"
+import configparser
+
+config = configparser.ConfigParser()
+config.read('configurations.ini')
+input_data_fp = config['filepaths']['input_data']
+output_data_fp= config['filepaths']['output_data']
+
 #this needs to match up to bins and step size defined in 'Sliding_Window_Code.py'
 step=1
 bins = np.arange(0,24.1,step)
@@ -19,7 +24,7 @@ decimals=0
 
 def load_ephem(dtime,dtime2):
     year=pd.to_datetime(dtime).year
-    orbit_df = pd.read_csv(root+'output_data/trajectory{}.csv'.format(year), parse_dates=['datetime_ut'])
+    orbit_df = pd.read_csv(output_data_fp + '/trajectory{}.csv'.format(year), parse_dates=['datetime_ut'])
     orbit_df = orbit_df.loc[orbit_df['datetime_ut'].between(dtime,dtime2), :]
     return orbit_df
 def flux_norm(dtime,dtime2):
@@ -35,9 +40,9 @@ def flux_norm(dtime,dtime2):
     mean_lat=np.take(lat_arr, lat_arr.size//2) 
     
     if mean_lat > -5 and mean_lat <5:
-        flux_arr = np.load(root+'output_data/lowlat_flux.npy', allow_pickle=True)
+        flux_arr = np.load(output_data_fp + '/lowlat_flux.npy', allow_pickle=True)
     else:
-        flux_arr= np.load(root+'output_data/highlat_flux.npy', allow_pickle=True)
+        flux_arr= np.load(output_data_fp + '/highlat_flux.npy', allow_pickle=True)
     
     if LT2 <LT1:
         lt1_arr = np.arange(LT1, len(bins), step)
@@ -102,7 +107,7 @@ def ephemeris_labels(dtime):
     """
 
     year=pd.to_datetime(dtime).year
-    fp=root+'output_data/trajectory{}.csv'.format(year)
+    fp=output_data_fp + '/trajectory{}.csv'.format(year)
     orbit_df = pd.read_csv(fp,parse_dates=['datetime_ut'])
     dtime_pandas=pd.Timestamp(dtime)
     orbit_df.index=orbit_df['datetime_ut']

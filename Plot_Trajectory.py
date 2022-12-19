@@ -4,22 +4,26 @@ Created on Fri Jan  7 11:35:15 2022
 
 @author: eliza
 """
-root="C:/Users/eliza/Desktop/Python_Scripts/"
 
 import pandas as pd
 import matplotlib.pyplot as plt
 import datetime
+import configparser
 
+config = configparser.ConfigParser()
+config.read('configurations.ini')
+input_data_fp = config['filepaths']['input_data']
+output_data_fp= config['filepaths']['output_data']
 
 
 def make_full_trajectory_plot(date1, date2):
     year = datetime.datetime.strftime(date1, '%Y')
     #Load in trajectory data by year.
-    ephem = pd.read_csv(root+'output_data/trajectory{}.csv'.format(year), parse_dates=(['datetime_ut']))
+    ephem = pd.read_csv(output_data_fp + '/trajectory{}.csv'.format(year), parse_dates=(['datetime_ut']))
     ephem = ephem.loc[ephem['datetime_ut'].between(date1, date2),:]
     ephem = ephem.drop_duplicates(subset='datetime_ut', keep='first', inplace=False)
     # for full trajectory plot load in trajectory combined for all years.
-    #ephem=pd.read_csv(root+'output_data/trajectorytotal.csv', parse_dates=(['datetime_ut']))
+    #ephem=pd.read_csv(output_data_fp + '/trajectorytotal.csv', parse_dates=(['datetime_ut']))
     ephem = ephem.sort_values(by=['datetime_ut']).reset_index(drop=True)
     #Convert from datetime to doyfrac
     dtimes = [(i.timetuple().tm_yday + i.timetuple().tm_hour/24 + i.timetuple().tm_min /
@@ -63,10 +67,6 @@ day1str = '20060101'
 day1 = pd.Timestamp(day1str)
 day2str = '20061231'
 day2 = pd.Timestamp(day2str)
-yr = datetime.datetime.strftime(day1, '%Y')
-year = datetime.datetime.strftime(day1, '%Y')
-ephem = pd.read_csv(root+'output_data/trajectory{}.csv'.format(year), parse_dates=(['datetime_ut']))
-ephem = ephem.drop_duplicates(subset='datetime_ut', keep='first', inplace=False)
 ax = make_full_trajectory_plot(day1, day2)
 plt.show()
 
