@@ -14,11 +14,16 @@ by finding the 10th and 80th percentile of the total (sum of flux density at con
 #import modules
 import numpy as np
 import pandas as pd
-root="C:/Users/eliza/Desktop/Python_Scripts/"
+import configparser
+
+config = configparser.ConfigParser()
+config.read('configurations.ini')
+input_data_fp = config['filepaths']['input_data']
+output_data_fp= config['filepaths']['output_data']
 
 #Load dataframe with flux+trajectory data, find associated LT bin for each row.
 def load_df(bins_, step):
-    fp= root + 'output_data/skr_traj_df_allyears.csv'
+    fp= output_data_fp + '/skr_traj_df_allyears.csv'
     df = pd.read_csv(fp)
     df = df[['Latitude', 'LT', 'flux']]
     df['LT']=df['LT'].round(decimals = step)
@@ -59,5 +64,5 @@ lowlat, highlat=split_all(bins_, step, df)
 
 lowlat = np.array(lowlat,dtype=object)
 highlat=np.array(highlat,dtype=object)
-np.save(root+'output_data/lowlat_flux.npy', lowlat)
-np.save(root+'output_data/highlat_flux.npy', lowlat)
+np.save(output_data_fp + '/lowlat_flux.npy', lowlat)
+np.save(output_data_fp + '/highlat_flux.npy', lowlat)

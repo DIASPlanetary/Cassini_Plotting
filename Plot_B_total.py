@@ -12,6 +12,12 @@ import matplotlib.dates as mdates
 import pandas as pd
 from datetime import datetime
 import matplotlib.pyplot as plt
+import configparser
+
+config = configparser.ConfigParser()
+config.read('configurations.ini')
+input_data_fp = config['filepaths']['input_data']
+output_data_fp= config['filepaths']['output_data']
 
 
 def plot_b_total(ax, mag_df, csize=12):
@@ -56,7 +62,7 @@ fig,ax = plt.subplots(1,1,figsize=(16,12))
 data_start=pd.Timestamp('2006-01-01')
 data_end=pd.Timestamp('2006-01-04')
 year = datetime.strftime(data_start, '%Y')
-fp = root+'output_data/trajectory{}.csv'.format(year)
+fp = output_data_fp + '/trajectory{}.csv'.format(year)
 mag_df=pd.read_csv(fp,parse_dates=['datetime_ut'])
 ax=plot_b_total(ax, mag_df)
 plt.show()
